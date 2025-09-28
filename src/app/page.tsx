@@ -506,7 +506,7 @@ function DashboardContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Demo Info Banner */}
       {showDemoInfo && (
         <motion.div
@@ -551,7 +551,7 @@ function DashboardContent() {
         onLogout={handleLogout} 
         userRole={user.role} 
       />
-      <div className={`lg:ml-80 transition-all duration-300 ${showDemoInfo ? 'pt-16 sm:pt-12' : ''}`}>
+      <div className={`lg:ml-80 transition-all duration-300 pt-20 lg:pt-0 ${showDemoInfo ? 'pt-28 lg:pt-12' : ''}`}>
         {renderPage()}
       </div>
     </div>

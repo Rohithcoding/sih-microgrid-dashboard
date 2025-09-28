@@ -125,7 +125,7 @@ export function EnhancedLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <div className="flex min-h-screen">
         {/* Left Side - Features */}
         <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 p-12 text-white relative overflow-hidden">

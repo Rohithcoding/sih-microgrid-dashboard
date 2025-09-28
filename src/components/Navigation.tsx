@@ -80,9 +80,9 @@ export function Navigation({ currentPage, onPageChange, onLogout, userRole }: Na
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="p-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
+          className="p-3 bg-white shadow-lg rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
         >
-          {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {isMobileOpen ? <X className="h-6 w-6 text-gray-700" /> : <Menu className="h-6 w-6 text-gray-700" />}
         </motion.button>
       </div>
 
@@ -94,7 +94,7 @@ export function Navigation({ currentPage, onPageChange, onLogout, userRole }: Na
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsMobileOpen(false)}
-            className="lg:hidden fixed inset-0 bg-black/50 z-40"
+            className="lg:hidden fixed inset-0 bg-black/50 z-30"
           />
         )}
       </AnimatePresence>
@@ -103,7 +103,7 @@ export function Navigation({ currentPage, onPageChange, onLogout, userRole }: Na
       <motion.div
         variants={sidebarVariants}
         animate={isCollapsed ? 'collapsed' : 'expanded'}
-        className={`fixed left-0 top-0 h-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-r border-gray-200 dark:border-gray-700 z-30 shadow-xl ${
+        className={`fixed left-0 top-0 h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-40 shadow-xl ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         } transition-transform duration-300`}
       >
@@ -127,6 +127,7 @@ export function Navigation({ currentPage, onPageChange, onLogout, userRole }: Na
                 </motion.div>
               )}
               
+              {/* Desktop collapse button */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -134,6 +135,16 @@ export function Navigation({ currentPage, onPageChange, onLogout, userRole }: Na
                 className="hidden lg:flex p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 <Menu className="h-5 w-5" />
+              </motion.button>
+              
+              {/* Mobile close button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsMobileOpen(false)}
+                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                <X className="h-5 w-5 text-gray-600 dark:text-gray-400" />
               </motion.button>
             </div>
           </div>
@@ -154,10 +165,10 @@ export function Navigation({ currentPage, onPageChange, onLogout, userRole }: Na
                       onPageChange(item.id);
                       setIsMobileOpen(false);
                     }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                    className={`w-full flex items-center space-x-3 px-4 py-4 lg:py-3 rounded-lg transition-all duration-200 touch-manipulation ${
                       isActive
                         ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700'
                     }`}
                   >
                     <Icon className={`h-5 w-5 ${isActive ? `text-${item.color}-500` : ''}`} />
