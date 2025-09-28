@@ -41,7 +41,7 @@ function DashboardContent() {
   const { data, isLoading, error } = useRealTimeData();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const [showDemoInfo, setShowDemoInfo] = useState(true);
+  const [showDemoInfo, setShowDemoInfo] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
