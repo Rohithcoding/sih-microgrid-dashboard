@@ -214,30 +214,46 @@ export function SystemAlerts({ data }: SystemAlertsProps) {
 
   return (
     <Card className="glass-card">
-      <Flex alignItems="center" className="space-x-2 mb-4">
-        <motion.div
-          animate={{ 
-            scale: criticalAlerts.length > 0 ? [1, 1.1, 1] : 1,
-            rotate: criticalAlerts.length > 0 ? [0, 5, -5, 0] : 0
-          }}
-          transition={{ 
-            duration: criticalAlerts.length > 0 ? 2 : 0, 
-            repeat: criticalAlerts.length > 0 ? Infinity : 0 
-          }}
-        >
-          <AlertTriangle className="h-6 w-6 text-yellow-500" />
-        </motion.div>
-        <Title className="text-xl font-bold">System Alerts & Notifications</Title>
-        <Badge 
-          color={criticalAlerts.length > 0 ? 'red' : warningAlerts.length > 0 ? 'yellow' : 'green'} 
-          size="sm"
-        >
-          {alerts.length} Active
-        </Badge>
-      </Flex>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 mb-6">
+        <div className="flex items-center space-x-3">
+          <motion.div
+            animate={{ 
+              scale: criticalAlerts.length > 0 ? [1, 1.1, 1] : 1,
+              rotate: criticalAlerts.length > 0 ? [0, 5, -5, 0] : 0
+            }}
+            transition={{ 
+              duration: criticalAlerts.length > 0 ? 2 : 0, 
+              repeat: criticalAlerts.length > 0 ? Infinity : 0 
+            }}
+          >
+            <AlertTriangle className="h-6 w-6 text-yellow-500" />
+          </motion.div>
+          <Title className="text-lg sm:text-xl font-bold">System Alerts & Notifications</Title>
+        </div>
+        <div className="flex flex-wrap gap-2 justify-center sm:justify-end">
+          <Badge 
+            color={criticalAlerts.length > 0 ? 'red' : 'gray'} 
+            size="sm"
+          >
+            {criticalAlerts.length} Critical
+          </Badge>
+          <Badge 
+            color={warningAlerts.length > 0 ? 'yellow' : 'gray'} 
+            size="sm"
+          >
+            {warningAlerts.length} Warning
+          </Badge>
+          <Badge 
+            color={infoAlerts.length > 0 ? 'green' : 'gray'} 
+            size="sm"
+          >
+            {infoAlerts.length} Info
+          </Badge>
+        </div>
+      </div>
 
-      {/* Alert Summary */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      {/* Alert Summary - Mobile Responsive */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <motion.div
           whileHover={{ scale: 1.02 }}
           className={`p-4 rounded-lg border ${criticalAlerts.length > 0 ? 
@@ -303,74 +319,87 @@ export function SystemAlerts({ data }: SystemAlertsProps) {
               <Text className="text-sm text-gray-500">No active alerts or warnings</Text>
             </motion.div>
           ) : (
-            alerts.slice(0, 8).map((alert: Alert, index: number) => (
+            alerts.map((alert: Alert, index: number) => (
               <motion.div
                 key={alert.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
                 whileHover={{ scale: 1.01 }}
-                className={`p-4 rounded-lg border ${getAlertBgClass(alert.severity)}`}
+                className={`p-3 sm:p-4 rounded-lg border ${getAlertBgClass(alert.severity)} border-l-4`}
               >
-                <Flex alignItems="start" className="space-x-3">
-                  <div className="flex-shrink-0 mt-0.5">
-                    {getAlertIcon(alert.type, alert.severity)}
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <Flex alignItems="center" className="space-x-2 mb-1">
-                      {getCategoryIcon(alert.category)}
-                      <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {alert.category}
-                      </Text>
+                <div className="flex flex-col sm:flex-row sm:items-start space-y-2 sm:space-y-0 sm:space-x-3">
+                  <div className="flex items-center space-x-3 sm:flex-col sm:space-x-0 sm:space-y-1">
+                    <div className="flex-shrink-0">
+                      {getAlertIcon(alert.type, alert.severity)}
+                    </div>
+                    <div className="sm:hidden">
                       <Badge color={getAlertColor(alert.severity)} size="xs">
                         {alert.severity.toUpperCase()}
                       </Badge>
-                    </Flex>
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                      <div className="flex items-center space-x-2 mb-1 sm:mb-0">
+                        {getCategoryIcon(alert.category)}
+                        <Text className="text-sm font-semibold text-gray-900 dark:text-white">
+                          {alert.category}
+                        </Text>
+                        <div className="hidden sm:block">
+                          <Badge color={getAlertColor(alert.severity)} size="xs">
+                            {alert.severity.toUpperCase()}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-1 text-xs text-gray-500">
+                        <Clock className="h-3 w-3" />
+                        <span>{formatTimestamp(alert.timestamp)}</span>
+                      </div>
+                    </div>
                     
-                    <Text className="text-sm text-gray-800 dark:text-gray-200 mb-2">
+                    <Text className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">
                       {alert.message}
                     </Text>
-                    
-                    <Flex alignItems="center" className="space-x-2">
-                      <Clock className="h-3 w-3 text-gray-400" />
-                      <Text className="text-xs text-gray-500">
-                        {formatTimestamp(alert.timestamp)}
-                      </Text>
-                    </Flex>
                   </div>
-                </Flex>
+                </div>
               </motion.div>
             ))
           )}
         </AnimatePresence>
       </div>
 
-      {/* Alert Actions */}
+      {/* Alert Actions - Mobile Responsive */}
       {alerts.length > 0 && (
         <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <Flex justifyContent="between" alignItems="center">
-            <Text className="text-sm text-gray-600 dark:text-gray-400">
-              Showing {Math.min(8, alerts.length)} of {alerts.length} alerts
-            </Text>
-            <div className="flex space-x-2">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+            <div className="text-center sm:text-left">
+              <Text className="text-sm text-gray-600 dark:text-gray-400">
+                Showing all {alerts.length} alerts
+              </Text>
+              <Text className="text-xs text-gray-500 dark:text-gray-500">
+                {criticalAlerts.length} critical, {warningAlerts.length} warning, {infoAlerts.length} info
+              </Text>
+            </div>
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-3 py-1 text-xs bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-md hover:bg-blue-200 dark:hover:bg-blue-900/40 transition-colors"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full sm:w-auto px-4 py-2 text-sm bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/40 transition-colors font-medium"
               >
-                View All
+                Export Alerts
               </motion.button>
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-900/20 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-900/40 transition-colors"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full sm:w-auto px-4 py-2 text-sm bg-gray-100 dark:bg-gray-900/20 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-900/40 transition-colors font-medium"
               >
-                Clear All
+                Mark All Read
               </motion.button>
             </div>
-          </Flex>
+          </div>
         </div>
       )}
     </Card>
