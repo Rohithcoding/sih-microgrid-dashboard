@@ -38,7 +38,9 @@ function generateMicrogridData() {
   
   // Calculate efficiency
   const totalGeneration = solarOutput + tegOutput;
-  const efficiency = (totalGeneration / 3.0) * 100; // Assuming 3kW max capacity
+  const efficiencyRaw = (totalGeneration / 3.0) * 100; // Assuming 3kW max capacity
+  // Ensure efficiency stays above 22% with slight natural variation up to ~30%
+  const efficiency = Math.max(22 + Math.random() * 8, efficiencyRaw);
   
   return {
     timestamp: now.toISOString(),
@@ -113,7 +115,7 @@ function generateMicrogridData() {
     
     // System Efficiency
     efficiency: Number(efficiency.toFixed(1)),
-    systemHealth: efficiency > 15 ? 'excellent' : efficiency > 10 ? 'good' : 'warning',
+    systemHealth: efficiency > 22 ? 'excellent' : efficiency > 15 ? 'good' : 'warning',
     
     // AI Predictions
     aiPredictions: {
