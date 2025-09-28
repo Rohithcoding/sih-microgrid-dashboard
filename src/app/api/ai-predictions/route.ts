@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 // AI Load Management Predictions
 function generateLoadPredictions() {
@@ -255,15 +255,28 @@ function getWeatherDescription(temp: number, cloudCover: number): string {
   return `${tempDesc} and ${skyDesc}`;
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Always return all predictions to avoid using request.url
-    const response = {
-      loadPredictions: generateLoadPredictions(),
-      solarPredictions: generateSolarPredictions(),
-      batteryPredictions: generateBatteryPredictions(),
-      weatherPredictions: generateWeatherPredictions()
-    };
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type') || 'all';
+    
+    let response: any = {};
+    
+    if (type === 'load' || type === 'all') {
+      response.loadPredictions = generateLoadPredictions();
+    }
+    
+    if (type === 'solar' || type === 'all') {
+      response.solarPredictions = generateSolarPredictions();
+    }
+    
+    if (type === 'battery' || type === 'all') {
+      response.batteryPredictions = generateBatteryPredictions();
+    }
+    
+    if (type === 'weather' || type === 'all') {
+      response.weatherPredictions = generateWeatherPredictions();
+    }
     
     return NextResponse.json(response, {
       headers: {

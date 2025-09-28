@@ -18,6 +18,7 @@ import {
 
 import { LoginForm } from '@/components/LoginForm';
 import { Navigation } from '@/components/Navigation';
+import { DashboardHeader } from '@/components/DashboardHeader';
 import { SolarMonitoring } from '@/components/SolarMonitoring';
 import { BatterySystem } from '@/components/BatterySystem';
 import { ThermalSystem } from '@/components/ThermalSystem';
@@ -29,8 +30,7 @@ import { TurbineMonitoring } from '@/components/TurbineMonitoring';
 import { PowerConversion } from '@/components/PowerConversion';
 import { PredictiveAnalytics } from '@/components/PredictiveAnalytics';
 import { GridShiftingSystem } from '@/components/GridShiftingSystem';
-import { AlertsBell } from '@/components/AlertsBell';
-// import { SolarPage } from '@/pages/SolarPage';
+import { DashboardOverview } from '@/components/DashboardOverview';
 import { useRealTimeData } from '@/hooks/useRealTimeData';
 
 interface User {
@@ -41,9 +41,9 @@ interface User {
 export default function MicrogridDashboard() {
   const { data, isLoading, error } = useRealTimeData();
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [user, setUser] = useState<User | null>({ username: 'Public User', role: 'admin' }); // Default public access
+  const [user, setUser] = useState<User>({ username: 'Demo User', role: 'admin' }); // Auto-login as admin
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const [showDemoAccounts, setShowDemoAccounts] = useState(false);
+  const [showDemoInfo, setShowDemoInfo] = useState(true);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -54,25 +54,16 @@ export default function MicrogridDashboard() {
 
   const handleLogin = (credentials: { username: string; password: string; role: string }) => {
     setUser({ username: credentials.username, role: credentials.role });
-    setShowDemoAccounts(false);
   };
 
   const handleLogout = () => {
-    setUser({ username: 'Public User', role: 'admin' }); // Reset to public access instead of null
+    setUser({ username: 'Demo User', role: 'admin' }); // Reset to demo user instead of null
     setCurrentPage('dashboard');
-    setShowDemoAccounts(false);
   };
 
   const handlePageChange = (page: string) => {
     setCurrentPage(page);
   };
-
-  // Demo accounts data
-  const demoAccounts = [
-    { username: 'admin', password: 'admin123', role: 'admin', description: 'Full system access & controls', color: 'red' },
-    { username: 'operator', password: 'operator123', role: 'operator', description: 'Operations & monitoring', color: 'blue' },
-    { username: 'viewer', password: 'viewer123', role: 'viewer', description: 'Read-only dashboard access', color: 'green' }
-  ];
 
   if (isLoading) {
     return (
@@ -102,6 +93,18 @@ export default function MicrogridDashboard() {
   }
 
   const renderPage = () => {
+    if (currentPage === 'dashboard') {
+      return (
+        <div className="p-4 md:p-6">
+          <DashboardOverview 
+            onCardClick={handlePageChange}
+            currentTime={currentTime}
+            systemStatus="operational"
+          />
+        </div>
+      );
+    }
+    
     switch (currentPage) {
       case 'solar':
         return (
@@ -239,46 +242,11 @@ export default function MicrogridDashboard() {
             <SystemAlerts data={data} />
           </div>
         );
-      case 'dashboard':
       default:
         return (
           <div className="space-y-6 p-6">
-            {/* Feature Tabs Section */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Brain className="h-5 w-5 text-white" />
-                    <Text className="text-white font-medium">AI Load Management</Text>
-                  </div>
-                  <Text className="text-blue-100 text-sm">Smart optimization active</Text>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <TrendingUp className="h-5 w-5 text-white" />
-                    <Text className="text-white font-medium">Energy Prediction</Text>
-                  </div>
-                  <Text className="text-blue-100 text-sm">94% accuracy forecasting</Text>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Cloud className="h-5 w-5 text-white" />
-                    <Text className="text-white font-medium">Weather Intelligence</Text>
-                  </div>
-                  <Text className="text-blue-100 text-sm">Real-time correlation</Text>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Activity className="h-5 w-5 text-white" />
-                    <Text className="text-white font-medium">System Optimization</Text>
-                  </div>
-                  <Text className="text-blue-100 text-sm">Continuous monitoring</Text>
-                </div>
-              </div>
-            </div>
+            {/* Dashboard Header */}
+            <DashboardHeader currentTime={currentTime} systemStatus="operational" />
 
             {/* Key Performance Indicators */}
       <Grid numItemsSm={2} numItemsLg={4} className="gap-6">
@@ -478,122 +446,52 @@ export default function MicrogridDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900">
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <Navigation 
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-          onLogout={handleLogout}
-          userRole={user?.role || 'admin'}
-          onShowDemoAccounts={() => setShowDemoAccounts(true)}
-          currentUser={user || { username: 'Public User', role: 'admin' }}
-        />
-        
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Minimal Top Bar with Alerts */}
-          <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {currentPage === 'dashboard' ? 'Dashboard Overview' :
-                   currentPage === 'solar' ? 'Solar Generation' :
-                   currentPage === 'battery' ? 'Battery Storage' :
-                   currentPage === 'thermal' ? 'Thermal Management' :
-                   currentPage === 'turbine' ? 'Turbine Operations' :
-                   currentPage === 'power' ? 'Power Electronics' :
-                   currentPage === 'grid-shift' ? 'Grid Management' :
-                   currentPage === 'ai-load' ? 'Load Intelligence' :
-                   currentPage === 'weather' ? 'Weather Analytics' :
-                   currentPage === 'efficiency' ? 'Performance Metrics' :
-                   currentPage === 'analytics' ? 'Predictive Analytics' :
-                   currentPage === 'alerts' ? 'Alert Management' : 'Dashboard'}
-                </h1>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {currentTime.toLocaleTimeString()}
-                </span>
+      {/* Demo Info Banner */}
+      {showDemoInfo && (
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+        >
+          <div className="px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="font-semibold text-sm sm:text-base">🚀 Live Demo - AI Microgrid Dashboard</span>
               </div>
-              
-              {/* Alerts Bell */}
-              <AlertsBell />
+              <div className="text-xs sm:text-sm opacity-90">
+                <span className="hidden sm:inline">•</span> No login required 
+                <span className="mx-1">•</span> Full access enabled 
+                <span className="mx-1">•</span> Real-time data simulation
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="text-xs bg-white/20 px-2 py-1 rounded hidden sm:block">
+                Efficiency: &gt;22% | Alerts: Live | Mobile: ✓
+              </div>
+              <button
+                onClick={() => setShowDemoInfo(false)}
+                className="text-white/80 hover:text-white p-1 rounded hover:bg-white/10 transition-colors"
+                aria-label="Close demo banner"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
           </div>
-          
-          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
-            {renderPage()}
-          </main>
-        </div>
+        </motion.div>
+      )}
 
-        {/* Demo Accounts Modal */}
-        {showDemoAccounts && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
-            >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <Title className="text-xl font-bold text-gray-900 dark:text-white">Demo Accounts</Title>
-                    <Text className="text-gray-600 dark:text-gray-400 mt-1">Try different access levels</Text>
-                  </div>
-                  <button
-                    onClick={() => setShowDemoAccounts(false)}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-
-                <div className="space-y-3">
-                  {demoAccounts.map((account) => (
-                    <motion.button
-                      key={account.username}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleLogin(account)}
-                      className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:shadow-lg ${
-                        account.color === 'red' ? 'border-red-200 hover:border-red-300 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:border-red-800' :
-                        account.color === 'blue' ? 'border-blue-200 hover:border-blue-300 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:border-blue-800' :
-                        'border-green-200 hover:border-green-300 bg-green-50 hover:bg-green-100 dark:bg-green-900/20 dark:border-green-800'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              account.color === 'red' ? 'bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200' :
-                              account.color === 'blue' ? 'bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200' :
-                              'bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200'
-                            }`}>
-                              {account.role.toUpperCase()}
-                            </span>
-                            <span className="font-semibold text-gray-900 dark:text-white">{account.username}</span>
-                          </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{account.description}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">Password: {account.password}</p>
-                        </div>
-                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    </motion.button>
-                  ))}
-                </div>
-
-                <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
-                    <strong>Current:</strong> {user?.username || 'Public User'} ({user?.role || 'admin'})
-                  </p>
-                  <p className="text-xs text-blue-600 dark:text-blue-300 mt-1">
-                    You can switch between accounts anytime or continue as public user
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
+      <Navigation 
+        currentPage={currentPage} 
+        onPageChange={handlePageChange} 
+        onLogout={handleLogout} 
+        userRole={user.role} 
+      />
+      <div className={`lg:ml-80 transition-all duration-300 ${showDemoInfo ? 'pt-16 sm:pt-12' : ''}`}>
+        {renderPage()}
       </div>
     </div>
   );
