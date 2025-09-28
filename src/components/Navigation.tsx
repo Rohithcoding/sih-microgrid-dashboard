@@ -38,6 +38,8 @@ interface NavigationProps {
   onPageChange: (page: string) => void;
   onLogout: () => void;
   userRole: string;
+  onShowDemoAccounts: () => void;
+  currentUser: { username: string; role: string };
 }
 
 const menuItems = [
@@ -55,7 +57,7 @@ const menuItems = [
   { id: 'alerts', label: 'Alert Management', icon: Bell, color: 'yellow' },
 ];
 
-export function Navigation({ currentPage, onPageChange, onLogout, userRole }: NavigationProps) {
+export function Navigation({ currentPage, onPageChange, onLogout, userRole, onShowDemoAccounts, currentUser }: NavigationProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -84,19 +86,6 @@ export function Navigation({ currentPage, onPageChange, onLogout, userRole }: Na
           {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </motion.button>
       </div>
-
-      {/* Mobile Overlay */}
-      <AnimatePresence>
-        {isMobileOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsMobileOpen(false)}
-            className="lg:hidden fixed inset-0 bg-black/50 z-40"
-          />
-        )}
-      </AnimatePresence>
 
       {/* Sidebar */}
       <motion.div
@@ -184,7 +173,7 @@ export function Navigation({ currentPage, onPageChange, onLogout, userRole }: Na
             </nav>
           </div>
 
-          {/* User Profile & Logout */}
+          {/* User Profile & Controls */}
           <div className="border-t border-gray-200 dark:border-gray-700 p-4">
             <div className="space-y-2">
               {!isCollapsed && (
@@ -193,19 +182,44 @@ export function Navigation({ currentPage, onPageChange, onLogout, userRole }: Na
                   animate={isCollapsed ? 'collapsed' : 'expanded'}
                   className="flex items-center space-x-3 px-3 py-2"
                 >
-                  <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    currentUser.username === 'Public User' 
+                      ? 'bg-gradient-to-br from-gray-400 to-gray-600' 
+                      : 'bg-gradient-to-br from-green-400 to-blue-500'
+                  }`}>
                     <User className="h-4 w-4 text-white" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Admin User</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      {currentUser.username}
+                    </p>
                     <div className="flex items-center space-x-2">
-                      <Badge color="green" size="xs">{userRole}</Badge>
-                      <span className="text-xs text-gray-500">Online</span>
+                      <Badge 
+                        color={currentUser.username === 'Public User' ? 'gray' : 'green'} 
+                        size="xs"
+                      >
+                        {userRole}
+                      </Badge>
+                      <span className="text-xs text-gray-500">
+                        {currentUser.username === 'Public User' ? 'Guest' : 'Online'}
+                      </span>
                     </div>
                   </div>
                 </motion.div>
               )}
+
+              {/* Demo Accounts Button */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={onShowDemoAccounts}
+                className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+              >
+                <Users className="h-5 w-5" />
+                {!isCollapsed && <span className="text-sm font-medium">Demo Accounts</span>}
+              </motion.button>
               
+              {/* Logout/Reset Button */}
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -213,12 +227,37 @@ export function Navigation({ currentPage, onPageChange, onLogout, userRole }: Na
                 className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
               >
                 <LogOut className="h-5 w-5" />
-                {!isCollapsed && <span className="text-sm font-medium">Logout</span>}
+                {!isCollapsed && (
+                  <span className="text-sm font-medium">
+                    {currentUser.username === 'Public User' ? 'Reset' : 'Logout'}
+                  </span>
+                )}
               </motion.button>
             </div>
           </div>
         </div>
       </motion.div>
+
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      {/* Mobile Demo Accounts Floating Button */}
+      <div className="lg:hidden fixed bottom-4 right-4 z-30">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onShowDemoAccounts}
+          className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg flex items-center space-x-2"
+        >
+          <Users className="h-5 w-5" />
+          <span className="text-sm font-medium">Demo</span>
+        </motion.button>
+      </div>
 
       {/* Main Content Spacer */}
       <div className={`${isCollapsed ? 'lg:ml-20' : 'lg:ml-70'} transition-all duration-300`} />

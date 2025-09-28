@@ -212,20 +212,23 @@ export function DashboardHeader({ currentTime, systemStatus }: DashboardHeaderPr
           
           <div className="relative z-10">
             <Flex justifyContent="between" alignItems="center" className="mb-4">
-              <div>
-                <Flex alignItems="center" className="space-x-3 mb-2">
+              <div className="flex-1 min-w-0">
+                <Flex alignItems="center" className="space-x-2 sm:space-x-3 mb-2">
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                   >
-                    <Zap className="h-8 w-8 text-yellow-300" />
+                    <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-300" />
                   </motion.div>
-                  <div>
-                    <Title className="text-3xl font-bold text-white mb-1">
+                  <div className="min-w-0 flex-1">
+                    <Title className="text-lg sm:text-2xl lg:text-3xl font-bold text-white mb-1 truncate">
                       AI-Enhanced Microgrid Dashboard
                     </Title>
-                    <Text className="text-blue-100 text-lg">
+                    <Text className="text-blue-100 text-sm sm:text-base lg:text-lg hidden sm:block">
                       Smart Energy Management & Monitoring System
+                    </Text>
+                    <Text className="text-blue-100 text-xs sm:hidden">
+                      Smart Energy Management
                     </Text>
                   </div>
                 </Flex>
@@ -263,7 +266,7 @@ export function DashboardHeader({ currentTime, systemStatus }: DashboardHeaderPr
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -8 }}
                           transition={{ duration: 0.15 }}
-                          className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 z-50"
+                          className="absolute right-0 mt-2 w-80 sm:w-80 max-w-[90vw] bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 z-50"
                         >
                           <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-800">
                             <p className="text-sm font-semibold text-gray-900 dark:text-white">System Alerts</p>
@@ -307,16 +310,26 @@ export function DashboardHeader({ currentTime, systemStatus }: DashboardHeaderPr
 
                 <Flex alignItems="center" justifyContent="end" className="space-x-2">
                   <Clock className="h-4 w-4 text-blue-200" />
-                  <Text className="text-blue-100 font-medium">
-                    {currentTime.toLocaleString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit'
-                    })}
+                  <Text className="text-blue-100 font-medium text-xs sm:text-sm">
+                    <span className="hidden sm:inline">
+                      {currentTime.toLocaleString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                      })}
+                    </span>
+                    <span className="sm:hidden">
+                      {currentTime.toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </span>
                   </Text>
                 </Flex>
               </div>

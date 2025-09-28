@@ -41,8 +41,9 @@ interface User {
 export default function MicrogridDashboard() {
   const { data, isLoading, error } = useRealTimeData();
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>({ username: 'Public User', role: 'admin' }); // Default public access
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [showDemoAccounts, setShowDemoAccounts] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -53,21 +54,25 @@ export default function MicrogridDashboard() {
 
   const handleLogin = (credentials: { username: string; password: string; role: string }) => {
     setUser({ username: credentials.username, role: credentials.role });
+    setShowDemoAccounts(false);
   };
 
   const handleLogout = () => {
-    setUser(null);
+    setUser({ username: 'Public User', role: 'admin' }); // Reset to public access instead of null
     setCurrentPage('dashboard');
+    setShowDemoAccounts(false);
   };
 
   const handlePageChange = (page: string) => {
     setCurrentPage(page);
   };
 
-  // If not logged in, show login form
-  if (!user) {
-    return <LoginForm onLogin={handleLogin} />;
-  }
+  // Demo accounts data
+  const demoAccounts = [
+    { username: 'admin', password: 'admin123', role: 'admin', description: 'Full system access & controls', color: 'red' },
+    { username: 'operator', password: 'operator123', role: 'operator', description: 'Operations & monitoring', color: 'blue' },
+    { username: 'viewer', password: 'viewer123', role: 'viewer', description: 'Read-only dashboard access', color: 'green' }
+  ];
 
   if (isLoading) {
     return (
@@ -438,14 +443,99 @@ export default function MicrogridDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900">
-      <Navigation 
-        currentPage={currentPage} 
-        onPageChange={handlePageChange} 
-        onLogout={handleLogout} 
-        userRole={user.role} 
-      />
-      <div className="lg:ml-80 transition-all duration-300">
-        {renderPage()}
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <Navigation 
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          onLogout={handleLogout}
+          userRole={user?.role || 'admin'}
+          onShowDemoAccounts={() => setShowDemoAccounts(true)}
+          currentUser={user || { username: 'Public User', role: 'admin' }}
+        />
+        
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <DashboardHeader 
+            currentTime={currentTime}
+            systemStatus={data?.systemHealth || 'operational'}
+          />
+          
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
+            {renderPage()}
+          </main>
+        </div>
+
+        {/* Demo Accounts Modal */}
+        {showDemoAccounts && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <Title className="text-xl font-bold text-gray-900 dark:text-white">Demo Accounts</Title>
+                    <Text className="text-gray-600 dark:text-gray-400 mt-1">Try different access levels</Text>
+                  </div>
+                  <button
+                    onClick={() => setShowDemoAccounts(false)}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  {demoAccounts.map((account) => (
+                    <motion.button
+                      key={account.username}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleLogin(account)}
+                      className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:shadow-lg ${
+                        account.color === 'red' ? 'border-red-200 hover:border-red-300 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:border-red-800' :
+                        account.color === 'blue' ? 'border-blue-200 hover:border-blue-300 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:border-blue-800' :
+                        'border-green-200 hover:border-green-300 bg-green-50 hover:bg-green-100 dark:bg-green-900/20 dark:border-green-800'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              account.color === 'red' ? 'bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200' :
+                              account.color === 'blue' ? 'bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200' :
+                              'bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200'
+                            }`}>
+                              {account.role.toUpperCase()}
+                            </span>
+                            <span className="font-semibold text-gray-900 dark:text-white">{account.username}</span>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{account.description}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">Password: {account.password}</p>
+                        </div>
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    <strong>Current:</strong> {user?.username || 'Public User'} ({user?.role || 'admin'})
+                  </p>
+                  <p className="text-xs text-blue-600 dark:text-blue-300 mt-1">
+                    You can switch between accounts anytime or continue as public user
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
       </div>
     </div>
   );
