@@ -17,7 +17,9 @@ import {
   Brain,
   CloudRain,
   Settings,
-  Cpu
+  Cpu,
+  Users,
+  Shield
 } from 'lucide-react';
 
 interface Alert {
@@ -35,7 +37,7 @@ interface SystemAlertsProps {
 
 export function SystemAlerts({ data }: SystemAlertsProps) {
   // Comprehensive alert data matching the bell notification system
-  const alerts = data?.alerts || [
+  const alerts = [
     {
       id: 'alert_1',
       type: 'critical',
@@ -115,6 +117,22 @@ export function SystemAlerts({ data }: SystemAlertsProps) {
       message: 'System efficiency exceeds 22% target - Optimal operation',
       timestamp: new Date(Date.now() - 18 * 60 * 1000).toISOString(), // 18 min ago
       severity: 'info'
+    },
+    {
+      id: 'alert_11',
+      type: 'warning',
+      category: 'Load Management',
+      message: 'Non-critical load shedding activated due to high demand',
+      timestamp: new Date(Date.now() - 20 * 60 * 1000).toISOString(), // 20 min ago
+      severity: 'warning'
+    },
+    {
+      id: 'alert_12',
+      type: 'critical',
+      category: 'Safety',
+      message: 'Emergency shutdown protocol initiated - Manual intervention required',
+      timestamp: new Date(Date.now() - 25 * 60 * 1000).toISOString(), // 25 min ago
+      severity: 'critical'
     }
   ];
 
@@ -155,6 +173,10 @@ export function SystemAlerts({ data }: SystemAlertsProps) {
         return <CloudRain className="h-4 w-4" />;
       case 'maintenance':
         return <Settings className="h-4 w-4" />;
+      case 'load management':
+        return <Users className="h-4 w-4" />;
+      case 'safety':
+        return <Shield className="h-4 w-4" />;
       default:
         return <Info className="h-4 w-4" />;
     }
