@@ -239,6 +239,7 @@ export default function MicrogridDashboard() {
             <SystemAlerts data={data} />
           </div>
         );
+      case 'dashboard':
       default:
         return (
           <div className="space-y-6 p-6">
