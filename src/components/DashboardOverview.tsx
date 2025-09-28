@@ -5,7 +5,8 @@ import { motion } from 'framer-motion';
 import { 
   Sun, Battery, Thermometer, Gauge, Cpu, Grid3X3, Brain, CloudRain, 
   Activity, AlertTriangle, Zap, LineChart, Settings, Users, Shield, Clock,
-  TrendingUp, BarChart3, Lightbulb, Wifi
+  TrendingUp, BarChart3, Lightbulb, Wifi, Target, Wind, Droplets, 
+  Power, Layers, Database, Monitor, Flame
 } from 'lucide-react';
 
 interface DashboardCardProps {
@@ -132,62 +133,122 @@ export function DashboardOverview({ onCardClick, currentTime, systemStatus }: Da
     },
     {
       id: 'battery',
-      title: 'Battery Storage',
-      description: 'Energy storage status',
+      title: 'Battery Storage (BESS)',
+      description: 'Energy storage monitoring',
       icon: Battery,
       color: 'green',
       metrics: [
-        { value: '78%', label: 'Charge Level', status: 'good' as const },
-        { value: '42 kWh', label: 'Stored', status: 'good' as const },
-        { value: 'Stable', label: 'Status', status: 'good' as const }
+        { value: '78%', label: 'SOC Level', status: 'good' as const },
+        { value: '42 kWh', label: 'Stored Energy', status: 'good' as const },
+        { value: '35°C', label: 'Temperature', status: 'good' as const }
       ]
     },
     {
       id: 'thermal',
       title: 'Thermal System',
-      description: 'Temperature monitoring',
+      description: 'Hot water & molten salts',
       icon: Thermometer,
       color: 'red',
       metrics: [
-        { value: '485°C', label: 'Hot Side', status: 'warning' as const },
-        { value: '85°C', label: 'Cool Side', status: 'good' as const },
+        { value: '485°C', label: 'Hot Water', status: 'warning' as const },
+        { value: '520°C', label: 'Molten Salt', status: 'warning' as const },
         { value: 'Active', label: 'Status', status: 'good' as const }
       ]
     },
     {
       id: 'turbine',
-      title: 'Turbine',
-      description: 'Power generation',
+      title: 'Steam Turbine',
+      description: 'Turbine & condenser ops',
       icon: Gauge,
       color: 'blue',
       metrics: [
-        { value: '18.2 kW', label: 'Output', status: 'good' as const },
-        { value: '3200 RPM', label: 'Speed', status: 'good' as const },
-        { value: 'Optimal', label: 'Status', status: 'good' as const }
+        { value: '18.2 kW', label: 'Power Output', status: 'good' as const },
+        { value: '3200 RPM', label: 'Turbine Speed', status: 'good' as const },
+        { value: '2.1 mm/s', label: 'Vibration', status: 'good' as const }
       ]
     },
     {
       id: 'power',
-      title: 'Power Electronics',
-      description: 'Inverter & converters',
+      title: 'Power Conversion',
+      description: 'Inverter & hybrid control',
       icon: Cpu,
       color: 'purple',
       metrics: [
-        { value: '98.2%', label: 'Efficiency', status: 'good' as const },
-        { value: '42°C', label: 'Temp', status: 'good' as const },
-        { value: 'Normal', label: 'Status', status: 'good' as const }
+        { value: '98.2%', label: 'Inverter Eff.', status: 'good' as const },
+        { value: '0.98', label: 'Power Factor', status: 'good' as const },
+        { value: 'Optimal', label: 'Controller', status: 'good' as const }
       ]
     },
     {
       id: 'grid-shift',
       title: 'Grid Management',
-      description: 'Grid connection status',
+      description: 'Auto grid shifting system',
       icon: Grid3X3,
       color: 'indigo',
       metrics: [
-        { value: 'Connected', label: 'Grid Status', status: 'good' as const },
+        { value: 'Islanded', label: 'Grid Status', status: 'good' as const },
         { value: '0.95', label: 'Power Factor', status: 'warning' as const },
-        { value: 'Auto', label: 'Mode', status: 'good' as const }
+        { value: 'Auto', label: 'Shift Mode', status: 'good' as const }
+      ]
+    },
+    {
+      id: 'ai-load',
+      title: 'AI Load Management',
+      description: 'Smart load optimization',
+      icon: Brain,
+      color: 'purple',
+      metrics: [
+        { value: '1.2 kW', label: 'Critical Load', status: 'good' as const },
+        { value: '0.8 kW', label: 'Non-Critical', status: 'good' as const },
+        { value: 'Active', label: 'AI Control', status: 'good' as const }
+      ]
+    },
+    {
+      id: 'weather',
+      title: 'Weather Intelligence',
+      description: 'Environmental monitoring',
+      icon: CloudRain,
+      color: 'cyan',
+      metrics: [
+        { value: '28°C', label: 'Temperature', status: 'good' as const },
+        { value: '65%', label: 'Humidity', status: 'good' as const },
+        { value: '40%', label: 'Cloud Cover', status: 'warning' as const }
+      ]
+    },
+    {
+      id: 'efficiency',
+      title: 'System Efficiency',
+      description: 'Performance metrics',
+      icon: Target,
+      color: 'green',
+      metrics: [
+        { value: '22.8%', label: 'Overall Eff.', status: 'good' as const },
+        { value: '>15%', label: 'Target Met', status: 'good' as const },
+        { value: 'Excellent', label: 'Health', status: 'good' as const }
+      ]
+    },
+    {
+      id: 'analytics',
+      title: 'Predictive Analytics',
+      description: 'AI-powered forecasting',
+      icon: LineChart,
+      color: 'indigo',
+      metrics: [
+        { value: '8.5h', label: 'Backup Time', status: 'good' as const },
+        { value: '12%', label: 'Fault Risk', status: 'warning' as const },
+        { value: '87%', label: 'Opt. Score', status: 'good' as const }
+      ]
+    },
+    {
+      id: 'ai-predictions',
+      title: 'AI Predictions',
+      description: 'Advanced ML forecasting',
+      icon: Brain,
+      color: 'purple',
+      metrics: [
+        { value: '94.2%', label: 'Accuracy', status: 'good' as const },
+        { value: '8', label: 'Active Models', status: 'good' as const },
+        { value: '12ms', label: 'Response Time', status: 'good' as const }
       ]
     },
     {
@@ -198,20 +259,8 @@ export function DashboardOverview({ onCardClick, currentTime, systemStatus }: Da
       color: 'red',
       metrics: [
         { value: '2', label: 'Active Alerts', status: 'warning' as const },
-        { value: '15', label: 'Today', status: 'good' as const },
-        { value: 'Monitoring', label: 'Status', status: 'good' as const }
-      ]
-    },
-    {
-      id: 'ai-predictions',
-      title: 'AI Predictions',
-      description: 'Advanced forecasting',
-      icon: Brain,
-      color: 'purple',
-      metrics: [
-        { value: '94.2%', label: 'Accuracy', status: 'good' as const },
-        { value: '8', label: 'Active Models', status: 'good' as const },
-        { value: '12ms', label: 'Response Time', status: 'good' as const }
+        { value: '15', label: 'Today Total', status: 'good' as const },
+        { value: 'Live', label: 'Monitoring', status: 'good' as const }
       ]
     }
   ];
@@ -285,12 +334,22 @@ export function DashboardOverview({ onCardClick, currentTime, systemStatus }: Da
       {/* Main Dashboard Cards */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">System Overview</h2>
-          <Badge color="emerald" size="sm">
-            All Systems Operational
-          </Badge>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Complete Monitoring Systems</h2>
+            <Text className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              Comprehensive real-time monitoring of all microgrid components
+            </Text>
+          </div>
+          <div className="flex space-x-2">
+            <Badge color="emerald" size="sm">
+              12 Systems Active
+            </Badge>
+            <Badge color="blue" size="sm">
+              All Operational
+            </Badge>
+          </div>
         </div>
-        <Grid numItemsMd={2} numItemsLg={3} className="gap-6">
+        <Grid numItemsSm={1} numItemsMd={2} numItemsLg={4} className="gap-6">
           {cards.map((card) => (
             <DashboardCard 
               key={card.id}
