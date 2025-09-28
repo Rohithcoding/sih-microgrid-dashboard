@@ -11,7 +11,13 @@ import {
   Zap,
   Battery,
   Thermometer,
-  Activity
+  Activity,
+  Grid3X3,
+  Gauge,
+  Brain,
+  CloudRain,
+  Settings,
+  Cpu
 } from 'lucide-react';
 
 interface Alert {
@@ -28,21 +34,86 @@ interface SystemAlertsProps {
 }
 
 export function SystemAlerts({ data }: SystemAlertsProps) {
+  // Comprehensive alert data matching the bell notification system
   const alerts = data?.alerts || [
     {
-      id: 'demo_1',
+      id: 'alert_1',
+      type: 'critical',
+      category: 'Battery',
+      message: 'Battery SOC critically low: 18% - Immediate action required',
+      timestamp: new Date(Date.now() - 1 * 60 * 1000).toISOString(), // 1 min ago
+      severity: 'critical'
+    },
+    {
+      id: 'alert_2',
+      type: 'warning',
+      category: 'Thermal',
+      message: 'Thermal system temperature elevated: 485°C',
+      timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString(), // 2 min ago
+      severity: 'warning'
+    },
+    {
+      id: 'alert_3',
+      type: 'warning',
+      category: 'Solar',
+      message: 'Solar generation below expected: 18.2kW (Expected: 24kW)',
+      timestamp: new Date(Date.now() - 3 * 60 * 1000).toISOString(), // 3 min ago
+      severity: 'warning'
+    },
+    {
+      id: 'alert_4',
+      type: 'critical',
+      category: 'Grid',
+      message: 'Grid connection lost - Switching to islanded mode',
+      timestamp: new Date(Date.now() - 4 * 60 * 1000).toISOString(), // 4 min ago
+      severity: 'critical'
+    },
+    {
+      id: 'alert_5',
+      type: 'warning',
+      category: 'Turbine',
+      message: 'Turbine vibration levels elevated: 2.8 mm/s',
+      timestamp: new Date(Date.now() - 6 * 60 * 1000).toISOString(), // 6 min ago
+      severity: 'warning'
+    },
+    {
+      id: 'alert_6',
       type: 'success',
-      category: 'Performance',
-      message: 'System efficiency exceeds 15% target',
-      timestamp: new Date().toISOString(),
+      category: 'AI System',
+      message: 'AI load optimization cycle completed successfully',
+      timestamp: new Date(Date.now() - 8 * 60 * 1000).toISOString(), // 8 min ago
       severity: 'info'
     },
     {
-      id: 'demo_2',
+      id: 'alert_7',
+      type: 'warning',
+      category: 'Weather',
+      message: 'Weather forecast: 70% cloud cover expected in 2 hours',
+      timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(), // 10 min ago
+      severity: 'warning'
+    },
+    {
+      id: 'alert_8',
       type: 'info',
-      category: 'Solar',
-      message: 'Solar generation optimal for current conditions',
-      timestamp: new Date().toISOString(),
+      category: 'Maintenance',
+      message: 'Predictive maintenance scheduled for TEG system',
+      timestamp: new Date(Date.now() - 12 * 60 * 1000).toISOString(), // 12 min ago
+      severity: 'info'
+    },
+    {
+      id: 'alert_9',
+      type: 'warning',
+      category: 'Power',
+      message: 'Inverter efficiency dropped to 96.8% - Check cooling system',
+      timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(), // 15 min ago
+      severity: 'warning'
+    },
+    {
+      id: 'alert_10',
+      type: 'success',
+      category: 'Performance',
+      message: 'System efficiency exceeds 22% target - Optimal operation',
+      timestamp: new Date(Date.now() - 18 * 60 * 1000).toISOString(), // 18 min ago
       severity: 'info'
     }
   ];
@@ -67,12 +138,23 @@ export function SystemAlerts({ data }: SystemAlertsProps) {
       case 'battery':
         return <Battery className="h-4 w-4" />;
       case 'solar':
-      case 'power':
         return <Zap className="h-4 w-4" />;
+      case 'power':
+        return <Cpu className="h-4 w-4" />;
       case 'thermal':
         return <Thermometer className="h-4 w-4" />;
       case 'performance':
         return <Activity className="h-4 w-4" />;
+      case 'grid':
+        return <Grid3X3 className="h-4 w-4" />;
+      case 'turbine':
+        return <Gauge className="h-4 w-4" />;
+      case 'ai system':
+        return <Brain className="h-4 w-4" />;
+      case 'weather':
+        return <CloudRain className="h-4 w-4" />;
+      case 'maintenance':
+        return <Settings className="h-4 w-4" />;
       default:
         return <Info className="h-4 w-4" />;
     }
@@ -106,11 +188,24 @@ export function SystemAlerts({ data }: SystemAlertsProps) {
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      second: '2-digit'
-    });
+    const now = new Date();
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+    
+    if (diffInMinutes < 1) {
+      return 'Just now';
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes} min ago`;
+    } else if (diffInMinutes < 1440) {
+      const hours = Math.floor(diffInMinutes / 60);
+      return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else {
+      return date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
   };
 
   const criticalAlerts = alerts.filter((alert: Alert) => alert.severity === 'critical');

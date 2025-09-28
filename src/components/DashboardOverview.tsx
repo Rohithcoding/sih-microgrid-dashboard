@@ -86,21 +86,71 @@ interface DashboardOverviewProps {
 export function DashboardOverview({ onCardClick, currentTime, systemStatus }: DashboardOverviewProps) {
   const [showAlertsPreview, setShowAlertsPreview] = useState(false);
 
-  // Sample alert data
+  // Sample alert data with comprehensive examples
   const recentAlerts = [
     {
       id: 1,
-      type: 'warning',
-      message: 'Thermal system temperature elevated: 485°C',
-      time: '2 min ago',
-      severity: 'medium'
+      type: 'critical',
+      message: 'Battery SOC critically low: 18% - Immediate action required',
+      time: '1 min ago',
+      severity: 'high',
+      category: 'Battery'
     },
     {
       id: 2,
+      type: 'warning',
+      message: 'Thermal system temperature elevated: 485°C',
+      time: '2 min ago',
+      severity: 'medium',
+      category: 'Thermal'
+    },
+    {
+      id: 3,
+      type: 'warning',
+      message: 'Solar generation below expected: 18.2kW (Expected: 24kW)',
+      time: '3 min ago',
+      severity: 'medium',
+      category: 'Solar'
+    },
+    {
+      id: 4,
+      type: 'critical',
+      message: 'Grid connection lost - Switching to islanded mode',
+      time: '4 min ago',
+      severity: 'high',
+      category: 'Grid'
+    },
+    {
+      id: 5,
+      type: 'warning',
+      message: 'Turbine vibration levels elevated: 2.8 mm/s',
+      time: '6 min ago',
+      severity: 'medium',
+      category: 'Turbine'
+    },
+    {
+      id: 6,
       type: 'info',
-      message: 'Battery SOC optimization completed',
-      time: '5 min ago',
-      severity: 'low'
+      message: 'AI load optimization cycle completed successfully',
+      time: '8 min ago',
+      severity: 'low',
+      category: 'AI System'
+    },
+    {
+      id: 7,
+      type: 'warning',
+      message: 'Weather forecast: 70% cloud cover expected in 2 hours',
+      time: '10 min ago',
+      severity: 'medium',
+      category: 'Weather'
+    },
+    {
+      id: 8,
+      type: 'info',
+      message: 'Predictive maintenance scheduled for TEG system',
+      time: '12 min ago',
+      severity: 'low',
+      category: 'Maintenance'
     }
   ];
   const headerCards = [
@@ -339,7 +389,7 @@ export function DashboardOverview({ onCardClick, currentTime, systemStatus }: Da
                   transition={{ duration: 2, repeat: Infinity }}
                   className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center"
                 >
-                  <span className="text-xs font-bold text-white">2</span>
+                  <span className="text-xs font-bold text-white">{recentAlerts.filter(alert => alert.severity === 'high' || alert.severity === 'medium').length}</span>
                 </motion.div>
                 {/* Pulse Animation for Active Alerts */}
                 <motion.div
@@ -357,33 +407,60 @@ export function DashboardOverview({ onCardClick, currentTime, systemStatus }: Da
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-12 right-0 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50"
+                    className="absolute top-12 right-0 w-96 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50"
                   >
                     <div className="p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-semibold text-gray-900 dark:text-white">Recent Alerts</h3>
-                        <Badge color="red" size="sm">
-                          {recentAlerts.length} Active
-                        </Badge>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-gray-900 dark:text-white">System Alerts</h3>
+                        <div className="flex space-x-2">
+                          <Badge color="red" size="sm">
+                            {recentAlerts.filter(alert => alert.severity === 'high').length} Critical
+                          </Badge>
+                          <Badge color="yellow" size="sm">
+                            {recentAlerts.filter(alert => alert.severity === 'medium').length} Warning
+                          </Badge>
+                        </div>
                       </div>
-                      <div className="space-y-3">
-                        {recentAlerts.map((alert) => (
-                          <div key={alert.id} className="flex items-start space-x-3 p-2 rounded-lg bg-gray-50 dark:bg-gray-700">
-                            <div className={`w-2 h-2 rounded-full mt-2 ${
-                              alert.severity === 'medium' ? 'bg-yellow-500' : 'bg-blue-500'
+                      <div className="max-h-80 overflow-y-auto space-y-2">
+                        {recentAlerts.slice(0, 6).map((alert) => (
+                          <div key={alert.id} className={`flex items-start space-x-3 p-3 rounded-lg border-l-4 ${
+                            alert.severity === 'high' ? 'bg-red-50 dark:bg-red-900/20 border-red-500' :
+                            alert.severity === 'medium' ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-500' :
+                            'bg-blue-50 dark:bg-blue-900/20 border-blue-500'
+                          }`}>
+                            <div className={`w-3 h-3 rounded-full mt-1 flex-shrink-0 ${
+                              alert.severity === 'high' ? 'bg-red-500' :
+                              alert.severity === 'medium' ? 'bg-yellow-500' :
+                              'bg-blue-500'
                             }`} />
-                            <div className="flex-1">
-                              <p className="text-sm text-gray-900 dark:text-white">{alert.message}</p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{alert.time}</p>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className={`text-xs font-medium px-2 py-1 rounded ${
+                                  alert.severity === 'high' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' :
+                                  alert.severity === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                                  'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                }`}>
+                                  {alert.category}
+                                </span>
+                                <span className="text-xs text-gray-500 dark:text-gray-400">{alert.time}</span>
+                              </div>
+                              <p className="text-sm text-gray-900 dark:text-white leading-tight">{alert.message}</p>
                             </div>
                           </div>
                         ))}
                       </div>
+                      {recentAlerts.length > 6 && (
+                        <div className="mt-3 text-center">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            +{recentAlerts.length - 6} more alerts
+                          </span>
+                        </div>
+                      )}
                       <button
                         onClick={() => onCardClick('alerts')}
-                        className="w-full mt-3 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                        className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
                       >
-                        View All Alerts
+                        View All Alerts Dashboard
                       </button>
                     </div>
                   </motion.div>
