@@ -1,12 +1,13 @@
 'use client';
 
 import { Card, Title, Text, Flex, Badge, Metric, ProgressBar, Grid } from '@tremor/react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 import { 
   Sun, Battery, Thermometer, Gauge, Cpu, Grid3X3, Brain, CloudRain, 
   Activity, AlertTriangle, Zap, LineChart, Settings, Users, Shield, Clock,
   TrendingUp, BarChart3, Lightbulb, Wifi, Target, Wind, Droplets, 
-  Power, Layers, Database, Monitor, Flame
+  Power, Layers, Database, Monitor, Flame, Bell
 } from 'lucide-react';
 
 interface DashboardCardProps {
@@ -83,6 +84,25 @@ interface DashboardOverviewProps {
 }
 
 export function DashboardOverview({ onCardClick, currentTime, systemStatus }: DashboardOverviewProps) {
+  const [showAlertsPreview, setShowAlertsPreview] = useState(false);
+
+  // Sample alert data
+  const recentAlerts = [
+    {
+      id: 1,
+      type: 'warning',
+      message: 'Thermal system temperature elevated: 485°C',
+      time: '2 min ago',
+      severity: 'medium'
+    },
+    {
+      id: 2,
+      type: 'info',
+      message: 'Battery SOC optimization completed',
+      time: '5 min ago',
+      severity: 'low'
+    }
+  ];
   const headerCards = [
     {
       id: 'ai-load',
@@ -298,6 +318,77 @@ export function DashboardOverview({ onCardClick, currentTime, systemStatus }: Da
                   hour12: true
                 })}
               </span>
+            </div>
+            {/* Alert Notifications Bell */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setShowAlertsPreview(true)}
+              onMouseLeave={() => setShowAlertsPreview(false)}
+            >
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => onCardClick('alerts')}
+                className="relative p-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-200"
+                title="View System Alerts"
+              >
+                <Bell className="h-5 w-5 text-white" />
+                {/* Notification Badge */}
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center"
+                >
+                  <span className="text-xs font-bold text-white">2</span>
+                </motion.div>
+                {/* Pulse Animation for Active Alerts */}
+                <motion.div
+                  animate={{ scale: [1, 1.4, 1], opacity: [0.7, 0, 0.7] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute inset-0 bg-red-400 rounded-lg"
+                />
+              </motion.button>
+
+              {/* Alerts Preview Dropdown */}
+              <AnimatePresence>
+                {showAlertsPreview && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-12 right-0 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50"
+                  >
+                    <div className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-semibold text-gray-900 dark:text-white">Recent Alerts</h3>
+                        <Badge color="red" size="sm">
+                          {recentAlerts.length} Active
+                        </Badge>
+                      </div>
+                      <div className="space-y-3">
+                        {recentAlerts.map((alert) => (
+                          <div key={alert.id} className="flex items-start space-x-3 p-2 rounded-lg bg-gray-50 dark:bg-gray-700">
+                            <div className={`w-2 h-2 rounded-full mt-2 ${
+                              alert.severity === 'medium' ? 'bg-yellow-500' : 'bg-blue-500'
+                            }`} />
+                            <div className="flex-1">
+                              <p className="text-sm text-gray-900 dark:text-white">{alert.message}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{alert.time}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => onCardClick('alerts')}
+                        className="w-full mt-3 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                      >
+                        View All Alerts
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
