@@ -13,7 +13,8 @@ import {
   AlertTriangle,
   CheckCircle,
   Brain,
-  Cloud
+  Cloud,
+  BarChart3
 } from 'lucide-react';
 
 import { LoginForm } from '@/components/LoginForm';
@@ -248,196 +249,252 @@ export default function MicrogridDashboard() {
             {/* Dashboard Header */}
             <DashboardHeader currentTime={currentTime} systemStatus="operational" />
 
+            {/* Comprehensive Analysis Dashboard Title */}
+            <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-xl p-6 shadow-lg text-white mb-6">
+              <div className="flex items-center space-x-3">
+                <BarChart3 className="h-8 w-8 text-yellow-300" />
+                <div>
+                  <h1 className="text-2xl font-bold">Complete System Analysis Dashboard</h1>
+                  <p className="text-blue-100 text-sm">Real-time monitoring, analytics, and AI-powered insights</p>
+                </div>
+              </div>
+            </div>
+
             {/* Key Performance Indicators */}
-      <Grid numItemsSm={2} numItemsLg={4} className="gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <Card className="glass-card">
-            <Flex alignItems="center" className="space-x-2">
-              <Zap className="h-5 w-5 text-yellow-500" />
-              <Text>Total Generation</Text>
-            </Flex>
-            <Metric className="mt-2">{data?.totalGeneration || '2.4'} kW</Metric>
-            <Flex className="mt-2">
-              <Text className="truncate">Efficiency</Text>
-              <Badge color="emerald" size="xs">
-                {data?.efficiency || '18.5'}%
-              </Badge>
-            </Flex>
-          </Card>
-        </motion.div>
+            <Grid numItemsSm={2} numItemsLg={4} className="gap-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                <Card className="glass-card">
+                  <Flex alignItems="center" className="space-x-2">
+                    <Zap className="h-5 w-5 text-yellow-500" />
+                    <Text>Total Generation</Text>
+                  </Flex>
+                  <Metric className="mt-2">{data?.totalGeneration || '2.4'} kW</Metric>
+                  <Flex className="mt-2">
+                    <Text className="truncate">Efficiency</Text>
+                    <Badge color="emerald" size="xs">
+                      {data?.efficiency || '18.5'}%
+                    </Badge>
+                  </Flex>
+                </Card>
+              </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Card className="glass-card">
-            <Flex alignItems="center" className="space-x-2">
-              <Battery className="h-5 w-5 text-green-500" />
-              <Text>Battery SOC</Text>
-            </Flex>
-            <Metric className="mt-2">{data?.batterySOC || '78'}%</Metric>
-            <ProgressBar 
-              value={data?.batterySOC || 78} 
-              className="mt-2" 
-              color="emerald"
-            />
-          </Card>
-        </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <Card className="glass-card">
+                  <Flex alignItems="center" className="space-x-2">
+                    <Battery className="h-5 w-5 text-green-500" />
+                    <Text>Battery SOC</Text>
+                  </Flex>
+                  <Metric className="mt-2">{data?.batterySOC || '78'}%</Metric>
+                  <ProgressBar 
+                    value={data?.batterySOC || 78} 
+                    className="mt-2" 
+                    color="emerald"
+                  />
+                </Card>
+              </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <Card className="glass-card">
-            <Flex alignItems="center" className="space-x-2">
-              <Sun className="h-5 w-5 text-orange-500" />
-              <Text>Solar Output</Text>
-            </Flex>
-            <Metric className="mt-2">{data?.solarOutput || '1.8'} kW</Metric>
-            <Flex className="mt-2">
-              <Text className="truncate">Irradiance</Text>
-              <Text>{data?.irradiance || '850'} W/m²</Text>
-            </Flex>
-          </Card>
-        </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                <Card className="glass-card">
+                  <Flex alignItems="center" className="space-x-2">
+                    <Sun className="h-5 w-5 text-orange-500" />
+                    <Text>Solar Output</Text>
+                  </Flex>
+                  <Metric className="mt-2">{data?.solarOutput || '1.8'} kW</Metric>
+                  <Flex className="mt-2">
+                    <Text className="truncate">Irradiance</Text>
+                    <Text>{data?.irradiance || '850'} W/m²</Text>
+                  </Flex>
+                </Card>
+              </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <Card className="glass-card">
-            <Flex alignItems="center" className="space-x-2">
-              <Brain className="h-5 w-5 text-purple-500" />
-              <Text>AI Status</Text>
-            </Flex>
-            <Metric className="mt-2">Active</Metric>
-            <Flex className="mt-2">
-              <CheckCircle className="h-4 w-4 text-green-500" />
-              <Text className="ml-1">All Systems Optimal</Text>
-            </Flex>
-          </Card>
-        </motion.div>
-      </Grid>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <Card className="glass-card">
+                  <Flex alignItems="center" className="space-x-2">
+                    <Brain className="h-5 w-5 text-purple-500" />
+                    <Text>AI Status</Text>
+                  </Flex>
+                  <Metric className="mt-2">Active</Metric>
+                  <Flex className="mt-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <Text className="ml-1">All Systems Optimal</Text>
+                  </Flex>
+                </Card>
+              </motion.div>
+            </Grid>
 
-      {/* Main Dashboard Sections */}
-      <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
-        {/* Solar & Generation */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <SolarMonitoring data={data} />
-        </motion.div>
+            {/* Primary Analysis Section - Solar & Battery */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+              <Title className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                🔋 Primary Energy Systems Analysis
+              </Title>
+              <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  <SolarMonitoring data={data} />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                  <BatterySystem data={data} />
+                </motion.div>
+              </Grid>
+            </div>
 
-        {/* Battery System */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          <BatterySystem data={data} />
-        </motion.div>
-      </Grid>
+            {/* Thermal & AI Intelligence Analysis */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+              <Title className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                🌡️ Thermal Systems & AI Intelligence
+              </Title>
+              <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                  <ThermalSystem data={data} />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                >
+                  <AILoadManagement data={data} />
+                </motion.div>
+              </Grid>
+            </div>
 
-      {/* Thermal & AI Systems */}
-      <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
-        {/* Thermal System */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <ThermalSystem data={data} />
-        </motion.div>
+            {/* Environmental & Performance Analysis */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+              <Title className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                🌤️ Environmental Intelligence & Performance Metrics
+              </Title>
+              <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  <WeatherIntelligence data={data} />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.7 }}
+                >
+                  <EfficiencyDashboard data={data} />
+                </motion.div>
+              </Grid>
+            </div>
 
-        {/* AI Load Management */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-        >
-          <AILoadManagement data={data} />
-        </motion.div>
-      </Grid>
+            {/* Advanced Mechanical Systems Analysis */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+              <Title className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                ⚙️ Advanced Mechanical & Power Systems
+              </Title>
+              <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                >
+                  <TurbineMonitoring data={data} />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.9 }}
+                >
+                  <PowerConversion data={data} />
+                </motion.div>
+              </Grid>
+            </div>
 
-      {/* Weather Intelligence & Efficiency */}
-      <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
-        {/* Weather Intelligence */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          <WeatherIntelligence data={data} />
-        </motion.div>
+            {/* Grid Management Analysis */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+              <Title className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                🔌 Grid Management & Emergency Systems
+              </Title>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.0 }}
+              >
+                <GridShiftingSystem data={data} />
+              </motion.div>
+            </div>
 
-        {/* Efficiency Dashboard */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-        >
-          <EfficiencyDashboard data={data} />
-        </motion.div>
-      </Grid>
+            {/* Predictive Analytics & AI Insights */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+              <Title className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                🤖 AI-Powered Predictive Analytics & Forecasting
+              </Title>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 1.1 }}
+              >
+                <PredictiveAnalytics data={data} />
+              </motion.div>
+            </div>
 
-      {/* Advanced Monitoring Systems */}
-      <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
-        {/* Turbine Monitoring */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          <TurbineMonitoring data={data} />
-        </motion.div>
+            {/* System Health & Alerts Analysis */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+              <Title className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                🚨 System Health Monitoring & Alert Analysis
+              </Title>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.2 }}
+              >
+                <SystemAlerts data={data} />
+              </motion.div>
+            </div>
 
-        {/* Power Conversion */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.9 }}
-        >
-          <PowerConversion data={data} />
-        </motion.div>
-      </Grid>
-
-      {/* Predictive Analytics */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 1.0 }}
-      >
-        <PredictiveAnalytics data={data} />
-      </motion.div>
-
-      {/* System Alerts */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 1.1 }}
-      >
-        <SystemAlerts data={data} />
-      </motion.div>
-
-      {/* Footer */}
-      <Card className="mt-8">
-        <Flex justifyContent="between" alignItems="center">
-          <Text className="text-sm text-gray-500">
-            AI-Enhanced Microgrid Dashboard v2.0 | Last Updated: {currentTime.toLocaleTimeString()}
-          </Text>
-          <Badge color="emerald" size="sm">
-            System Operational
-          </Badge>
-        </Flex>
+            {/* Comprehensive Footer */}
+            <Card className="mt-8 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900">
+              <Flex justifyContent="between" alignItems="center">
+                <div>
+                  <Text className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    🚀 AI-Enhanced Microgrid Dashboard v2.0 - Complete Analysis View
+                  </Text>
+                  <Text className="text-xs text-gray-500 dark:text-gray-400">
+                    Last Updated: {currentTime.toLocaleTimeString()} | All Systems Monitored | Real-time Data Active
+                  </Text>
+                </div>
+                <div className="flex space-x-2">
+                  <Badge color="emerald" size="sm">
+                    System Operational
+                  </Badge>
+                  <Badge color="blue" size="sm">
+                    AI Active
+                  </Badge>
+                  <Badge color="purple" size="sm">
+                    Analytics Live
+                  </Badge>
+                </div>
+              </Flex>
             </Card>
           </div>
         );
