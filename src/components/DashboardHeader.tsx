@@ -417,22 +417,8 @@ export function DashboardHeader({ currentTime, systemStatus, showFeatureTabs = f
                 
                 return (
                   <div className="p-6">
-                    {/* Header */}
-                    <Flex alignItems="center" justifyContent="between" className="mb-6">
-                      <Flex alignItems="center" className="space-x-3">
-                        <div className={`p-3 rounded-lg bg-${tab.color}-100 dark:bg-${tab.color}-900/20`}>
-                          <Icon className={`h-6 w-6 text-${tab.color}-600 dark:text-${tab.color}-400`} />
-                        </div>
-                        <div>
-                          <Title className="text-2xl font-bold text-gray-900 dark:text-white">
-                            {tab.details.title}
-                          </Title>
-                          <Text className="text-gray-600 dark:text-gray-400 mt-1">
-                            {tab.details.description}
-                          </Text>
-                        </div>
-                      </Flex>
-                      
+                    {/* Close button only */}
+                    <div className="flex justify-end mb-4">
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
@@ -441,7 +427,7 @@ export function DashboardHeader({ currentTime, systemStatus, showFeatureTabs = f
                       >
                         <X className="h-5 w-5 text-gray-500" />
                       </motion.button>
-                    </Flex>
+                    </div>
 
                     {/* Metrics Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
