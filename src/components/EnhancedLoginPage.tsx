@@ -66,7 +66,7 @@ export function EnhancedLoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [showDemo, setShowDemo] = useState(false);
+  const [showDemo, setShowDemo] = useState(true);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -319,12 +319,22 @@ export function EnhancedLoginPage() {
 
                   {/* Demo Accounts */}
                   <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <button
-                      onClick={() => setShowDemo(!showDemo)}
-                      className="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                    >
-                      {showDemo ? 'Hide' : 'Show'} Demo Accounts
-                    </button>
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <Text className="font-semibold text-gray-900 dark:text-white">
+                          Quick Demo Login
+                        </Text>
+                        <Text className="text-sm text-gray-600 dark:text-gray-400">
+                          Click any account below to login instantly
+                        </Text>
+                      </div>
+                      <button
+                        onClick={() => setShowDemo(!showDemo)}
+                        className="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                      >
+                        {showDemo ? 'Hide' : 'Show'}
+                      </button>
+                    </div>
                     
                     <AnimatePresence>
                       {showDemo && (
@@ -332,11 +342,16 @@ export function EnhancedLoginPage() {
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
                           exit={{ opacity: 0, height: 0 }}
-                          className="mt-4 space-y-3"
+                          className="space-y-3"
                         >
-                          <Text className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                            Click any account below to login instantly:
-                          </Text>
+                          <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800 mb-4">
+                            <div className="flex items-center space-x-2">
+                              <Shield className="h-4 w-4 text-blue-500" />
+                              <Text className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                                Demo Environment - No Registration Required
+                              </Text>
+                            </div>
+                          </div>
                           {demoUsers.map((user) => (
                             <motion.button
                               key={user.username}
