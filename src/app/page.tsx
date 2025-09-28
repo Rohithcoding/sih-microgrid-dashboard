@@ -18,7 +18,6 @@ import {
 
 import { LoginForm } from '@/components/LoginForm';
 import { Navigation } from '@/components/Navigation';
-import { DashboardHeader } from '@/components/DashboardHeader';
 import { SolarMonitoring } from '@/components/SolarMonitoring';
 import { BatterySystem } from '@/components/BatterySystem';
 import { ThermalSystem } from '@/components/ThermalSystem';
@@ -30,6 +29,7 @@ import { TurbineMonitoring } from '@/components/TurbineMonitoring';
 import { PowerConversion } from '@/components/PowerConversion';
 import { PredictiveAnalytics } from '@/components/PredictiveAnalytics';
 import { GridShiftingSystem } from '@/components/GridShiftingSystem';
+import { AlertsBell } from '@/components/AlertsBell';
 // import { SolarPage } from '@/pages/SolarPage';
 import { useRealTimeData } from '@/hooks/useRealTimeData';
 
@@ -242,8 +242,6 @@ export default function MicrogridDashboard() {
       default:
         return (
           <div className="space-y-6 p-6">
-            {/* Dashboard Header */}
-            <DashboardHeader currentTime={currentTime} systemStatus="operational" />
 
             {/* Key Performance Indicators */}
       <Grid numItemsSm={2} numItemsLg={4} className="gap-6">
@@ -454,11 +452,33 @@ export default function MicrogridDashboard() {
         />
         
         <div className="flex-1 flex flex-col overflow-hidden">
-          <DashboardHeader 
-            currentTime={currentTime}
-            systemStatus={data?.systemHealth || 'operational'}
-            showFeatureTabs={currentPage === 'dashboard'}
-          />
+          {/* Minimal Top Bar with Alerts */}
+          <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {currentPage === 'dashboard' ? 'Dashboard Overview' :
+                   currentPage === 'solar' ? 'Solar Generation' :
+                   currentPage === 'battery' ? 'Battery Storage' :
+                   currentPage === 'thermal' ? 'Thermal Management' :
+                   currentPage === 'turbine' ? 'Turbine Operations' :
+                   currentPage === 'power' ? 'Power Electronics' :
+                   currentPage === 'grid-shift' ? 'Grid Management' :
+                   currentPage === 'ai-load' ? 'Load Intelligence' :
+                   currentPage === 'weather' ? 'Weather Analytics' :
+                   currentPage === 'efficiency' ? 'Performance Metrics' :
+                   currentPage === 'analytics' ? 'Predictive Analytics' :
+                   currentPage === 'alerts' ? 'Alert Management' : 'Dashboard'}
+                </h1>
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {currentTime.toLocaleTimeString()}
+                </span>
+              </div>
+              
+              {/* Alerts Bell */}
+              <AlertsBell />
+            </div>
+          </div>
           
           <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
             {renderPage()}
