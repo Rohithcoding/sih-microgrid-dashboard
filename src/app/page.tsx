@@ -242,6 +242,42 @@ export default function MicrogridDashboard() {
       default:
         return (
           <div className="space-y-6 p-6">
+            {/* Feature Tabs Section */}
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Brain className="h-5 w-5 text-white" />
+                    <Text className="text-white font-medium">AI Load Management</Text>
+                  </div>
+                  <Text className="text-blue-100 text-sm">Smart optimization active</Text>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <TrendingUp className="h-5 w-5 text-white" />
+                    <Text className="text-white font-medium">Energy Prediction</Text>
+                  </div>
+                  <Text className="text-blue-100 text-sm">94% accuracy forecasting</Text>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Cloud className="h-5 w-5 text-white" />
+                    <Text className="text-white font-medium">Weather Intelligence</Text>
+                  </div>
+                  <Text className="text-blue-100 text-sm">Real-time correlation</Text>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Activity className="h-5 w-5 text-white" />
+                    <Text className="text-white font-medium">System Optimization</Text>
+                  </div>
+                  <Text className="text-blue-100 text-sm">Continuous monitoring</Text>
+                </div>
+              </div>
+            </div>
 
             {/* Key Performance Indicators */}
       <Grid numItemsSm={2} numItemsLg={4} className="gap-6">
