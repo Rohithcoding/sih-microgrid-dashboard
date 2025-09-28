@@ -92,8 +92,8 @@ export function DashboardOverview({ onCardClick, currentTime, systemStatus }: Da
       accuracy: '94% accuracy forecasting'
     },
     {
-      id: 'analytics',
-      title: 'Energy Prediction',
+      id: 'ai-predictions',
+      title: 'AI Predictions',
       subtitle: '94% accuracy forecasting',
       icon: TrendingUp,
       color: 'bg-green-500',
@@ -200,6 +200,18 @@ export function DashboardOverview({ onCardClick, currentTime, systemStatus }: Da
         { value: '2', label: 'Active Alerts', status: 'warning' as const },
         { value: '15', label: 'Today', status: 'good' as const },
         { value: 'Monitoring', label: 'Status', status: 'good' as const }
+      ]
+    },
+    {
+      id: 'ai-predictions',
+      title: 'AI Predictions',
+      description: 'Advanced forecasting',
+      icon: Brain,
+      color: 'purple',
+      metrics: [
+        { value: '94.2%', label: 'Accuracy', status: 'good' as const },
+        { value: '8', label: 'Active Models', status: 'good' as const },
+        { value: '12ms', label: 'Response Time', status: 'good' as const }
       ]
     }
   ];

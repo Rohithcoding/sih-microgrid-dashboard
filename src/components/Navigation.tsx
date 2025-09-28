@@ -52,6 +52,7 @@ const menuItems = [
   { id: 'weather', label: 'Weather Analytics', icon: CloudRain, color: 'cyan' },
   { id: 'efficiency', label: 'Performance Metrics', icon: Target, color: 'green' },
   { id: 'analytics', label: 'Predictive Analytics', icon: LineChart, color: 'indigo' },
+  { id: 'ai-predictions', label: 'AI Predictions', icon: Brain, color: 'purple' },
   { id: 'alerts', label: 'Alert Management', icon: Bell, color: 'yellow' },
 ];
 

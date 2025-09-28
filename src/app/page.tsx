@@ -17,7 +17,8 @@ import {
   BarChart3
 } from 'lucide-react';
 
-import { LoginForm } from '@/components/LoginForm';
+import { EnhancedLoginPage } from '@/components/EnhancedLoginPage';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { Navigation } from '@/components/Navigation';
 import { DashboardHeader } from '@/components/DashboardHeader';
 import { SolarMonitoring } from '@/components/SolarMonitoring';
@@ -32,17 +33,13 @@ import { PowerConversion } from '@/components/PowerConversion';
 import { PredictiveAnalytics } from '@/components/PredictiveAnalytics';
 import { GridShiftingSystem } from '@/components/GridShiftingSystem';
 import { DashboardOverview } from '@/components/DashboardOverview';
+import { AIPredictionDashboard } from '@/components/AIPredictionDashboard';
 import { useRealTimeData } from '@/hooks/useRealTimeData';
 
-interface User {
-  username: string;
-  role: string;
-}
-
-export default function MicrogridDashboard() {
+function DashboardContent() {
+  const { user, logout } = useAuth();
   const { data, isLoading, error } = useRealTimeData();
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [user, setUser] = useState<User>({ username: 'Demo User', role: 'admin' }); // Auto-login as admin
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [showDemoInfo, setShowDemoInfo] = useState(true);
 
@@ -53,18 +50,19 @@ export default function MicrogridDashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  const handleLogin = (credentials: { username: string; password: string; role: string }) => {
-    setUser({ username: credentials.username, role: credentials.role });
-  };
-
   const handleLogout = () => {
-    setUser({ username: 'Demo User', role: 'admin' }); // Reset to demo user instead of null
+    logout();
     setCurrentPage('dashboard');
   };
 
   const handlePageChange = (page: string) => {
     setCurrentPage(page);
   };
+
+  // Show login form if user is not authenticated
+  if (!user) {
+    return <EnhancedLoginPage />;
+  }
 
   if (isLoading) {
     return (
@@ -229,6 +227,12 @@ export default function MicrogridDashboard() {
               </div>
             </div>
             <PredictiveAnalytics data={data} />
+          </div>
+        );
+      case 'ai-predictions':
+        return (
+          <div className="space-y-6 p-6">
+            <AIPredictionDashboard data={data} />
           </div>
         );
       case 'alerts':
@@ -551,5 +555,13 @@ export default function MicrogridDashboard() {
         {renderPage()}
       </div>
     </div>
+  );
+}
+
+export default function MicrogridDashboard() {
+  return (
+    <AuthProvider>
+      <DashboardContent />
+    </AuthProvider>
   );
 }
